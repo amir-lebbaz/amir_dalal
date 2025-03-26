@@ -106,3 +106,24 @@ app.listen(PORT, () => {
     console.log(`الخادم يعمل على http://localhost:${PORT}`);
     createBackup(); // إنشاء نسخة احتياطية أولية
 });
+function cleanOldBackups() {
+    try {
+        const backups = fs.readdirSync(dataDir)
+            .filter(file => file.startsWith('messages-backup-'))
+            .sort()
+            .reverse();
+        
+        // احتفظ بأحدث 5 نسخ واحذف الباقي
+        if (backups.length > 5) {
+            for (let i = 5; i < backups.length; i++) {
+                fs.unlinkSync(path.join(dataDir, backups[i]));
+                console.log('تم حذف النسخة القديمة:', backups[i]);
+            }
+        }
+    } catch (err) {
+        console.error('فشل في تنظيف النسخ القديمة:', err);
+    }
+}
+
+// استدعاء الدالة كل 24 ساعة
+setInterval(cleanOldBackups, 24 * 60 * 60 * 1000);
