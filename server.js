@@ -7,7 +7,7 @@ const app = express();
 const PORT = 3000;
 
 // إنشاء ملف messages.json إذا لم يكن موجودًا
-const messagesFile = path.join(__dirname, 'messages.json');
+const messagesFile = path.join('/var/data', 'chat-app-messages.json');
 
 if (!fs.existsSync(messagesFile)) {
     fs.writeFileSync(messagesFile, JSON.stringify([], null, 2));
